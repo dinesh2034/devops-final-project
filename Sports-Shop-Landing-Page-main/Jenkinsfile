@@ -8,9 +8,11 @@ pipeline {
     stages {
         stage('Build with Maven') {
             steps {
-                script {
-                    docker.image('maven:latest').inside('-u root') {
-                        sh 'mvn -T 4 -Dmaven.repo.local=target/.m2repo clean install'
+                dir('Sports-Shop-Landing-Page-main') {
+                    script {
+                        docker.image('maven:latest').inside('-u root') {
+                            sh 'mvn -T 4 -Dmaven.repo.local=target/.m2repo clean install'
+                        }
                     }
                 }
             }
@@ -18,8 +20,10 @@ pipeline {
 
         stage('Build and Push Docker Image') {
             steps {
-                sh 'chmod +x deploy.sh'
-                sh './deploy.sh'
+                dir('Sports-Shop-Landing-Page-main') {
+                    sh 'chmod +x deploy.sh'
+                    sh './deploy.sh'
+                }
             }
         }
     }
